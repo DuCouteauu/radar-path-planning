@@ -1,0 +1,6 @@
+pyfirmata
+tk
+matplotlib
+numpy
+argparse
+scipy
