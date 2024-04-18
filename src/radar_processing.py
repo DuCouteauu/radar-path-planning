@@ -1,13 +1,12 @@
 from argparse import Namespace
+# import acconeer.exptool as et
 import numpy as np
 from time import sleep
 import scipy.signal
 import config
 import grid_mapping
 
-# Uncomment if running in connected mode
-# import acconeer.exptool as et
-
+# TODO: Move util functions out of the RadarSystem class, as many of them are static
 
 class RadarSystem:
     """The radar system collects and processes the radar data such that it can be plotted and used for path planning"""
@@ -16,6 +15,7 @@ class RadarSystem:
     servo_angle = 0
     hit_grid = np.zeros([config.grid_size, config.grid_size], dtype=int)  # Remember x and y are backwards in this grid
 
+    # frame_distances is a list containing the distances that the radar system sweeps through
     # TODO Generalize this
     frame_distances = np.linspace(config.radar_range_interval[0],
                                      config.radar_range_interval[1],
@@ -25,6 +25,14 @@ class RadarSystem:
             min_cutoff_index = i
             break
     frame_distances = frame_distances[min_cutoff_index:]
+
+    def reset_system(self):
+        self.polar_data = {}
+        self.servoCCW = True  # Indicates the direction of the next servo rotation
+        self.servo_angle = 0
+        self.hit_grid = np.zeros([config.grid_size, config.grid_size],
+                            dtype=int)  # Remember x and y are backwards in this grid
+
 
     def round_data(self, data, decimal):
         # TODO Make a utils file for static functions like this
@@ -135,8 +143,7 @@ class RadarSystem:
         """Updates the probabilistic hit grid"""
         for distance in distances:
             x_cell, y_cell = grid_mapping.cart_to_cell(*grid_mapping.polar_to_cart(distance, np.radians(angle)))
-            print(x_cell)
-            print(y_cell)
+            print(f"Hit Detected At: {x_cell}, {y_cell}")
             self.hit_grid[config.grid_size-y_cell][x_cell-1] = self.hit_grid[config.grid_size-y_cell][x_cell-1] + 1
 
 
@@ -144,7 +151,7 @@ class RadarConnected(RadarSystem):
     """The connected radar system"""
     def __init__(self, board):
 
-        # Define radar paramaters
+        # Define radar config
         self.args = [
             Namespace(serial_port=config.front_radar_port, socket_addr=None, spi=False, sensors=[1], verbose=False,
                       debug=False, quiet=False),
@@ -152,7 +159,6 @@ class RadarConnected(RadarSystem):
                       debug=False, quiet=False)]
         et.utils.config_logging(self.args[0])
         et.utils.config_logging(self.args[1])
-
         self.client = [et.a111.Client(**et.a111.get_client_args(self.args[0])),
                        et.a111.Client(**et.a111.get_client_args(self.args[1]))]
 

@@ -13,15 +13,15 @@ min_distance = 0
 radar_field_size = 70  # In degrees
 radar_increment = 20
 images_per_rotation = 1
-radar_range_interval = [1, 7]
+radar_range_interval = [1, 6]  # In meters
 servo_offset = 7
-rotations_per_scan = 20
+rotations_per_scan = 19
 
-sim_rotation_delay = 0.1
+sim_rotation_delay = 0.2
 connected_rotation_delay = 0.5
 
 downsampling_factor = 4
-running_average_factor = 0.5
+running_average_factor = 0  # Adjust accordingly
 refresh_rate = 5
 
 # Arduino Motor Control Pins
@@ -35,14 +35,14 @@ speed_pin = 3
 peak_distance = 400  # min distance between peaks, in samples
 peak_width = 5  # min width of a peak
 height = 220  # min height of a peak
-threshold = 0
+threshold = 0.5
 max_peak_change_per_frame = 1
 
 hit_maximum = 10  # Number of hits required to reach max color value on grid
 
 
 # Grid Settings
-max_range = 7
+max_range = radar_range_interval[1]
 grid_range = 2*max_range
 grid_size = 17  # nxn, must be odd
 grid_size_internal = grid_size - 2  # No longer needed
