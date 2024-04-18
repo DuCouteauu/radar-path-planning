@@ -93,7 +93,7 @@ def astar(maze, start, end):
 
 
 def main():
-    # Test maze
+    """This main function is only used to test the path planning system"""
     maze = [[0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
             [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
