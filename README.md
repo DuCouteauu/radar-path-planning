@@ -1,7 +1,5 @@
 # radar-path-planning
 
-Repository for capstone 2023/2024
-
 This goal of this project is to design and implement a system that can scan a surrounding environment using radar imaging, and plan/execute a path to the desired location.
 
 # Running the Simulation
